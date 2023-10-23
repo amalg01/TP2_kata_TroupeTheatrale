@@ -2,6 +2,9 @@ import java.text.NumberFormat;
 import java.util.*;
 
 public class StatementPrinter {
+  // Définir des variables statiques pour les types de pièces de théâtre
+  public static final String TRAGEDY = "tragedy";
+  public static final String COMEDY = "comedy";
 
   public String print(Invoice invoice, HashMap<String, Play> plays) {
     int totalAmount = 0;
@@ -15,13 +18,13 @@ public class StatementPrinter {
       int thisAmount = 0;
 
       switch (play.type) {
-        case "tragedy":
+        case TRAGEDY:
           thisAmount = 40000;
           if (perf.audience > 30) {
             thisAmount += 1000 * (perf.audience - 30);
           }
           break;
-        case "comedy":
+        case COMEDY:
           thisAmount = 30000;
           if (perf.audience > 20) {
             thisAmount += 10000 + 500 * (perf.audience - 20);
