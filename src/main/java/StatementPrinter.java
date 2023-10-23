@@ -5,7 +5,7 @@ public class StatementPrinter {
 
   public String print(Invoice invoice, HashMap<String, Play> plays) {
    
-    int totalAmount = 0;
+    double totalAmount = 0.0;
     int volumeCredits = 0;
     StringBuffer result = new StringBuffer(String.format("Statement for %s\n", invoice.customer));
 
@@ -13,25 +13,25 @@ public class StatementPrinter {
 
     for (Performance perf : invoice.performances) {
       Play play = plays.get(perf.playID);
-      int thisAmount = 0;
+      double thisAmount = 0.0;
 
       switch (play.getType()) {
         case TRAGEDY:
-          thisAmount = 40000;
+          thisAmount = 400.0;
           if (perf.audience > 30) {
-            thisAmount += 1000 * (perf.audience - 30);
+            thisAmount += 10.0 * (perf.audience - 30);
           }
           break;
         case COMEDY:
-          thisAmount = 30000;
+          thisAmount = 300.0;
           if (perf.audience > 20) {
-            thisAmount += 10000 + 500 * (perf.audience - 20);
+            thisAmount += 100.0 + 5.0 * (perf.audience - 20);
           }
-          thisAmount += 300 * perf.audience;
+          thisAmount += 3.0 * perf.audience;
           break;
         default:
           throw new Error("unknown type: ${play.type}");
-      }
+      } 
 
       // add volume credits
       volumeCredits += Math.max(perf.audience - 30, 0);
@@ -39,10 +39,10 @@ public class StatementPrinter {
       if (Play.PlayType.COMEDY.equals(play.getType())) volumeCredits += Math.floor(perf.audience / 5);
 
       // print line for this order
-      result.append(String.format("  %s: %s (%s seats)\n", play.getName(), frmt.format(thisAmount / 100), perf.audience));
+      result.append(String.format("  %s: %s (%s seats)\n", play.getName(), frmt.format(thisAmount), perf.audience));
       totalAmount += thisAmount;
     }
-    result.append(String.format("Amount owed is %s\n", frmt.format(totalAmount / 100)));
+    result.append(String.format("Amount owed is %s\n", frmt.format(totalAmount)));
     result.append(String.format("You earned %s credits\n", volumeCredits));
     return result.toString();
   }
