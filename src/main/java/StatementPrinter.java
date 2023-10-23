@@ -2,11 +2,9 @@ import java.text.NumberFormat;
 import java.util.*;
 
 public class StatementPrinter {
-  // Définir des variables statiques pour les types de pièces de théâtre
-  public static final String TRAGEDY = "tragedy";
-  public static final String COMEDY = "comedy";
 
   public String print(Invoice invoice, HashMap<String, Play> plays) {
+   
     int totalAmount = 0;
     int volumeCredits = 0;
     StringBuffer result = new StringBuffer(String.format("Statement for %s\n", invoice.customer));
@@ -17,7 +15,7 @@ public class StatementPrinter {
       Play play = plays.get(perf.playID);
       int thisAmount = 0;
 
-      switch (play.getType()) { 
+      switch (play.getType()) {
         case TRAGEDY:
           thisAmount = 40000;
           if (perf.audience > 30) {
@@ -46,7 +44,8 @@ public class StatementPrinter {
     }
     result.append(String.format("Amount owed is %s\n", frmt.format(totalAmount / 100)));
     result.append(String.format("You earned %s credits\n", volumeCredits));
-    return result.toString(); 
+    return result.toString();
   }
 
 }
+ 
