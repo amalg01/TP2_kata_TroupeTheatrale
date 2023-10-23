@@ -1,10 +1,23 @@
 public class Play {
 
-  public String name;
-  public String type;
+  public enum PlayType {
+    TRAGEDY,
+    COMEDY,
+  }
 
-  public Play(String name, String type) {
-    this.name = name;
-    this.type = type;
+  private String name;
+  private PlayType type;
+
+  public Play(String name, PlayType type) {
+      this.name = name;
+      this.type = type;
+  }
+
+  public String getName() {
+      return name;
+  }
+
+  public PlayType getType() {
+      return type;
   }
 }

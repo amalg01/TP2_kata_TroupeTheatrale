@@ -17,7 +17,7 @@ public class StatementPrinter {
       Play play = plays.get(perf.playID);
       int thisAmount = 0;
 
-      switch (play.type) {
+      switch (play.getType()) { 
         case TRAGEDY:
           thisAmount = 40000;
           if (perf.audience > 30) {
@@ -38,15 +38,15 @@ public class StatementPrinter {
       // add volume credits
       volumeCredits += Math.max(perf.audience - 30, 0);
       // add extra credit for every ten comedy attendees
-      if ("comedy".equals(play.type)) volumeCredits += Math.floor(perf.audience / 5);
+      if (Play.PlayType.COMEDY.equals(play.getType())) volumeCredits += Math.floor(perf.audience / 5);
 
       // print line for this order
-      result.append(String.format("  %s: %s (%s seats)\n", play.name, frmt.format(thisAmount / 100), perf.audience));
+      result.append(String.format("  %s: %s (%s seats)\n", play.getName(), frmt.format(thisAmount / 100), perf.audience));
       totalAmount += thisAmount;
     }
     result.append(String.format("Amount owed is %s\n", frmt.format(totalAmount / 100)));
     result.append(String.format("You earned %s credits\n", volumeCredits));
-    return result.toString();
+    return result.toString(); 
   }
 
 }
