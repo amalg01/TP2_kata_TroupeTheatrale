@@ -9,7 +9,7 @@ public class StatementPrinter {
     int volumeCredits = 0;
     StringBuffer result = new StringBuffer(String.format("Statement for %s\n", invoice.customer));
 
-    NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
+    NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US); 
 
     for (Performance perf : invoice.performances) {
       Play play = plays.get(perf.playID);
@@ -31,7 +31,7 @@ public class StatementPrinter {
           break;
         default:
           throw new Error("unknown type: ${play.type}");
-      } 
+      }  
 
       // add volume credits
       volumeCredits += Math.max(perf.audience - 30, 0);
@@ -41,7 +41,7 @@ public class StatementPrinter {
       // print line for this order
       result.append(String.format("  %s: %s (%s seats)\n", play.getName(), frmt.format(thisAmount), perf.audience));
       totalAmount += thisAmount;
-    }
+    } 
     result.append(String.format("Amount owed is %s\n", frmt.format(totalAmount)));
     result.append(String.format("You earned %s credits\n", volumeCredits));
     return result.toString();
