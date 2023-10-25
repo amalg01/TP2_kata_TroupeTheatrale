@@ -1,3 +1,4 @@
+import java.text.NumberFormat;
 import java.util.*;
 
 public class Invoice {
@@ -16,7 +17,7 @@ public class Invoice {
   }
 
   public void calculateInvoice(HashMap<String, Play> plays) {
-    
+
     double totalAmount = 0.0;
     int volumeCredits = 0;
 
@@ -41,7 +42,11 @@ public class Invoice {
         default:
           throw new Error("unknown type: ${play.type}");
       }
-      this.invoiceDetails.playDetails.add(new PlayDetails(play.getName(), thisAmount, perf.audience)); // ajouter les détails de la pice dans notre liste de PlayDetails
+      this.invoiceDetails.playDetails.add(new PlayDetails(play.getName(), thisAmount, perf.audience)); // ajouter les
+                                                                                                       // détails de la
+                                                                                                       // pice dans
+                                                                                                       // notre liste de
+                                                                                                       // PlayDetails
 
       // add volume credits
       volumeCredits += Math.max(perf.audience - 30, 0);
@@ -54,5 +59,19 @@ public class Invoice {
     this.invoiceDetails.setTotalAmount(totalAmount);
     this.invoiceDetails.setVolumeCredits(volumeCredits);
   }
+
+  public String toText() {
+    StringBuffer result = new StringBuffer(String.format("Statement for %s\n", this.customer));
+
+    NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
+
+    for (PlayDetails play : this.invoiceDetails.playDetails) {
+
+      result.append(String.format("  %s: %s (%s seats)\n", play.getPlayName(), frmt.format(play.getPricePaid()),
+      play.getSeatsSold()));
+    }
+    result.append(String.format("Amount owed is %s\n", frmt.format(this.invoiceDetails.getTotalAmount())));
+    result.append(String.format("You earned %s credits\n", this.invoiceDetails.getVolumeCredits()));
+    return result.toString();
+  }
 }
- 
