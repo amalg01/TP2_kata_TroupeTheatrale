@@ -83,4 +83,32 @@ public class Invoice {
 
     return result.toString();
   }
+
+  public void toHTML(){
+    StringBuffer result = new StringBuffer();
+    result.append("<html><head><title>Invoice</title></head><body>");
+
+    result.append(String.format("<h1>Invoice</h1><ul><li><strong>Client :</strong> %s</li></ul>", this.customer));
+    result.append("<table border=\"1\"><tr><th>Play</th><th>Seats sold</th><th>Price</th></tr>");
+
+    NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
+
+    for (PlayDetails play : this.invoiceDetails.playDetails) {
+        result.append(String.format("<tr><td>%s</td><td>%s</td><td>%s</td></tr>",
+                play.getPlayName(), play.getSeatsSold(), frmt.format(play.getPricePaid())));
+    }
+
+    result.append(String.format("<tr><td colspan=\"2\"><strong>Total owed:</strong></td> <td>" + frmt.format(this.invoiceDetails.getTotalAmount()) +"</td></tr>"));
+    result.append(String.format("<tr><td colspan=\"2\"><strong>Fidelity points earned: </strong></td><td>" + this.invoiceDetails.getVolumeCredits()+"</td></tr>"));
+    result.append("</table>");
+    result.append("<p>Pay within 30 days, and all will be well!</p>");
+    // Terminez la construction de la chaîne HTML 
+    result.append("</body></html>");
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter("./src/factures/facture_"+ this.customer +".html"))) {
+      writer.write(result.toString());
+    } catch (IOException e) {
+      System.err.println("Une erreur s'est produite lors de la création du fichier : " + e.getMessage());
+    }
+  }
+
 }
