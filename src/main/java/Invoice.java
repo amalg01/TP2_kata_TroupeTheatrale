@@ -84,7 +84,7 @@ public class Invoice {
     return result.toString();
   }
 
-  public void toHTML(){
+  public String toHTML(){
     StringBuffer result = new StringBuffer();
     result.append("<html><head><title>Invoice</title></head><body>");
 
@@ -102,13 +102,15 @@ public class Invoice {
     result.append(String.format("<tr><td colspan=\"2\"><strong>Fidelity points earned: </strong></td><td>" + this.invoiceDetails.getVolumeCredits()+"</td></tr>"));
     result.append("</table>");
     result.append("<p>Pay within 30 days, and all will be well!</p>");
-    // Terminez la construction de la chaîne HTML 
+    // Terminez la construction de la chaîne HTML
     result.append("</body></html>");
     try (BufferedWriter writer = new BufferedWriter(new FileWriter("./src/factures/facture_"+ this.customer +".html"))) {
       writer.write(result.toString());
     } catch (IOException e) {
       System.err.println("Une erreur s'est produite lors de la création du fichier : " + e.getMessage());
     }
+
+    return result.toString();
   }
 
 }

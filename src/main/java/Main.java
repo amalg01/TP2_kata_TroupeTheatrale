@@ -30,7 +30,7 @@ public class Main {
                 
         StatementPrinter statementPrinter = new StatementPrinter();
         StatementPrinter statementPrinter2 = new StatementPrinter();
-        var r = statementPrinter.print(invoice, plays);
+        var r = statementPrinter.print(invoice, plays); 
         r = statementPrinter2.print(invoice2, plays2);
-    }
+    } 
 }
