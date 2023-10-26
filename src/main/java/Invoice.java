@@ -1,3 +1,6 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.*;
 
@@ -62,16 +65,22 @@ public class Invoice {
 
   public String toText() {
     StringBuffer result = new StringBuffer(String.format("Statement for %s\n", this.customer));
-
     NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
 
     for (PlayDetails play : this.invoiceDetails.playDetails) {
 
       result.append(String.format("  %s: %s (%s seats)\n", play.getPlayName(), frmt.format(play.getPricePaid()),
-      play.getSeatsSold()));
+          play.getSeatsSold()));
     }
     result.append(String.format("Amount owed is %s\n", frmt.format(this.invoiceDetails.getTotalAmount())));
     result.append(String.format("You earned %s credits\n", this.invoiceDetails.getVolumeCredits()));
+
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter("./src/factures/facture_" + this.customer + ".txt"))) {
+      writer.write(result.toString());
+    } catch (IOException e) {
+      System.err.println("Une erreur s'est produite lors de la création du fichier : " + e.getMessage());
+    } 
+
     return result.toString();
   }
 }

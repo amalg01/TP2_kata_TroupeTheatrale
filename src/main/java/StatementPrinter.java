@@ -7,6 +7,5 @@ public class StatementPrinter {
     
     return invoice.toText();
   }
-
-} 
-  
+}  
+   
