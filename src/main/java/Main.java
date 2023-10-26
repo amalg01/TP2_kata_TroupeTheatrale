@@ -28,9 +28,15 @@ public class Main {
                 new Performance("romeo", 50),
                 new Performance("macbeth", 30)));
                 
-        StatementPrinter statementPrinter = new StatementPrinter();
-        StatementPrinter statementPrinter2 = new StatementPrinter();
-        var r = statementPrinter.print(invoice, plays); 
-        r = statementPrinter2.print(invoice2, plays2);
+
+        invoice.calculateInvoice(plays);
+        invoice2.calculateInvoice(plays2);
+        
+        invoice.toText();
+        invoice.toHTML();
+
+        invoice2.toText(); 
+        invoice2.toHTML(); 
+
     } 
 }
