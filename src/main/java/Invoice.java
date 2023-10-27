@@ -30,7 +30,7 @@ public class Invoice {
 
       switch (play.getType()) {
         case TRAGEDY:
-          thisAmount = 400.0; 
+          thisAmount = 400.0;
           if (perf.audience > 30) {
             thisAmount += 10.0 * (perf.audience - 30);
           }
@@ -45,11 +45,9 @@ public class Invoice {
         default:
           throw new Error("unknown type: ${play.type}");
       }
-      this.invoiceDetails.playDetails.add(new PlayDetails(play.getName(), thisAmount, perf.audience)); // ajouter les
-                                                                                                       // détails de la
-                                                                                                       // pice dans
-                                                                                                       // notre liste de
-                                                                                                       // PlayDetails
+
+      // ajouter les détails de la pièce dans notre liste de PlayDetails
+      this.invoiceDetails.playDetails.add(new PlayDetails(play.getName(), thisAmount, perf.audience));
 
       // add volume credits
       volumeCredits += Math.max(perf.audience - 30, 0);
@@ -57,11 +55,16 @@ public class Invoice {
       if (Play.PlayType.COMEDY.equals(play.getType()))
         volumeCredits += Math.floor(perf.audience / 5);
 
-      totalAmount += thisAmount; 
+      totalAmount += thisAmount;
     }
-    this.invoiceDetails.setTotalAmount(totalAmount); 
+    // Apply discount and deduct loyalty points if the customer has more than 150
+    // points
+    if (customer.getLoyaltyPoints() > 150) {
+      totalAmount -= 15.0;
+      customer.deductLoyaltyPoints(150);
+    }
+    this.invoiceDetails.setTotalAmount(totalAmount);
     this.invoiceDetails.setVolumeCredits(volumeCredits);
-    
   }
 
   public String toText() {
@@ -76,36 +79,41 @@ public class Invoice {
     result.append(String.format("Amount owed is %s\n", frmt.format(this.invoiceDetails.getTotalAmount())));
     result.append(String.format("You earned %s credits\n", this.invoiceDetails.getVolumeCredits()));
 
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter("./src/factures/facture_" + this.customer.getName() + ".txt"))) {
+    try (BufferedWriter writer = new BufferedWriter(
+        new FileWriter("./src/factures/facture_" + this.customer.getName() + ".txt"))) {
       writer.write(result.toString());
     } catch (IOException e) {
       System.err.println("Une erreur s'est produite lors de la création du fichier : " + e.getMessage());
-    } 
+    }
 
     return result.toString();
   }
 
-  public String toHTML(){
+  public String toHTML() {
     StringBuffer result = new StringBuffer();
     result.append("<html><head><title>Invoice</title></head><body>");
 
-    result.append(String.format("<h1>Invoice</h1><ul><li><strong>Client :</strong> %s</li></ul>", this.customer.getName()));
+    result.append(
+        String.format("<h1>Invoice</h1><ul><li><strong>Client :</strong> %s</li></ul>", this.customer.getName()));
     result.append("<table border=\"1\"><tr><th>Play</th><th>Seats sold</th><th>Price</th></tr>");
 
     NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
 
     for (PlayDetails play : this.invoiceDetails.playDetails) {
-        result.append(String.format("<tr><td>%s</td><td>%s</td><td>%s</td></tr>",
-                play.getPlayName(), play.getSeatsSold(), frmt.format(play.getPricePaid())));
+      result.append(String.format("<tr><td>%s</td><td>%s</td><td>%s</td></tr>",
+          play.getPlayName(), play.getSeatsSold(), frmt.format(play.getPricePaid())));
     }
 
-    result.append(String.format("<tr><td colspan=\"2\"><strong>Total owed:</strong></td> <td>" + frmt.format(this.invoiceDetails.getTotalAmount()) +"</td></tr>"));
-    result.append(String.format("<tr><td colspan=\"2\"><strong>Fidelity points earned: </strong></td><td>" + this.invoiceDetails.getVolumeCredits()+"</td></tr>"));
+    result.append(String.format("<tr><td colspan=\"2\"><strong>Total owed:</strong></td> <td>"
+        + frmt.format(this.invoiceDetails.getTotalAmount()) + "</td></tr>"));
+    result.append(String.format("<tr><td colspan=\"2\"><strong>Fidelity points earned: </strong></td><td>"
+        + this.invoiceDetails.getVolumeCredits() + "</td></tr>"));
     result.append("</table>");
     result.append("<p>Pay within 30 days, and all will be well!</p>");
     // Terminez la construction de la chaîne HTML
     result.append("</body></html>");
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter("./src/factures/facture_"+ this.customer.getName() +".html"))) {
+    try (BufferedWriter writer = new BufferedWriter(
+        new FileWriter("./src/factures/facture_" + this.customer.getName() + ".html"))) {
       writer.write(result.toString());
     } catch (IOException e) {
       System.err.println("Une erreur s'est produite lors de la création du fichier : " + e.getMessage());

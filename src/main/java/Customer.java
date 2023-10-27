@@ -3,15 +3,14 @@ public class Customer {
     private String customerNumber;
     private int loyaltyPoints;
 
-
-    public Customer(String name, String customerNumber) {
+    public Customer(String name, String customerNumber, int loyaltyPoints) {
         this.name = name;
         this.customerNumber = customerNumber;
-        this.loyaltyPoints = 0;
+        this.loyaltyPoints = loyaltyPoints;
     }
 
     public String getName() {
-        return name;
+        return name; 
     }
 
     public String getCustomerNumber() {
@@ -24,5 +23,15 @@ public class Customer {
 
     public void addLoyaltyPoints(int points) {
         this.loyaltyPoints += points;
+    }
+    
+    public void deductLoyaltyPoints(int points) {
+        if (points <= loyaltyPoints) {
+            loyaltyPoints -= points;
+        } else {
+            // Handle the case where the customer doesn't have enough points to deduct
+            // You can throw an exception, display a message, or handle it as needed.
+            System.err.println("Insufficient loyalty points to deduct.");
+        }
     }
 }

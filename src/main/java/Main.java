@@ -8,7 +8,7 @@ public class Main {
         plays.put("hamlet", new Play("Hamlet", Play.PlayType.TRAGEDY));
         plays.put("othello", new Play("Othello", Play.PlayType.TRAGEDY));
 
-        Customer customer1 = new Customer("Amal", "CUST123"); // Create a customer
+        Customer customer1 = new Customer("Amal", "CUST123", 300); // Create a customer
         Invoice invoice1 = new Invoice(customer1, List.of(
                 new Performance("hamlet", 55),
                 new Performance("othello", 40)));
@@ -20,7 +20,7 @@ public class Main {
         plays2.put("romeo", new Play("Romeo and Juliet", Play.PlayType.TRAGEDY));
         plays2.put("macbeth", new Play("Macbeth", Play.PlayType.TRAGEDY));
 
-        Customer customer2 = new Customer("Siham", "CUST456"); // Create another customer
+        Customer customer2 = new Customer("Siham", "CUST456", 150); // Create another customer
         Invoice invoice2 = new Invoice(customer2, List.of(
                 new Performance("as-like", 35),
                 new Performance("othello", 40),
