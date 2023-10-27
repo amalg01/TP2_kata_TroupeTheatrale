@@ -19,13 +19,15 @@ public class Invoice {
 
   }
 
-  public void calculateInvoice(HashMap<String, Play> plays) {
+  public void calculateInvoice() {
 
     double totalAmount = 0.0;
     int volumeCredits = 0;
 
     for (Performance perf : this.performances) {
-      Play play = plays.get(perf.playID);
+      Play play = perf.play;
+      // Play play = plays.get(perf.playID);
+
       double thisAmount = 0.0;
 
       switch (play.getType()) {
@@ -57,6 +59,7 @@ public class Invoice {
 
       totalAmount += thisAmount;
     }
+
     // Apply discount and deduct loyalty points if the customer has more than 150
     // points
     if (customer.getLoyaltyPoints() > 150) {

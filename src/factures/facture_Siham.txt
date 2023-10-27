@@ -1,6 +1,6 @@
 Statement for Siham
   As You Like It: $580.00 (35 seats)
-  Othello: $500.00 (40 seats)
+  othello: $500.00 (40 seats)
   Romeo and Juliet: $600.00 (50 seats)
   Macbeth: $400.00 (30 seats)
 Amount owed is $2,080.00
