@@ -1,16 +1,15 @@
 import org.junit.jupiter.api.Test;
-//import java.util.HashMap;
 import java.util.List;
 
-
 import static org.approvaltests.Approvals.verify;
-import static org.approvaltests.Approvals.verifyHtml;
+import static org.approvaltests.Approvals.verifyHtml; 
 
 public class StatementPrinterTests {
 
     @Test
     void exampleStatement() {
-        Play hamlet = new Play("Hamlet", Play.PlayType.TRAGEDY); 
+
+        Play hamlet = new Play("Hamlet", Play.PlayType.TRAGEDY);
         Play othello = new Play("Othello", Play.PlayType.TRAGEDY);
         Play asLike = new Play("As You Like It", Play.PlayType.COMEDY);
 
@@ -38,10 +37,10 @@ public class StatementPrinterTests {
                 new Performance(othello, 40)));
 
         invoice.calculateInvoice(); 
-        var result2 = invoice.toHTML(); 
+        var result2 = invoice.toHTML();
  
         verifyHtml(result2);  
         
-    }  
+    } 
 
-} 
+}

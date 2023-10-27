@@ -2,30 +2,27 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+        // 1st example
         Play hamlet = new Play("Hamlet", Play.PlayType.TRAGEDY);
-        Play othello = new Play("Othello", Play.PlayType.TRAGEDY);
+        Play othello = new Play("othello", Play.PlayType.TRAGEDY);
         Play asLike = new Play("As You Like It", Play.PlayType.COMEDY);
         Play romeo = new Play("Romeo and Juliet", Play.PlayType.TRAGEDY);
         Play macBeth = new Play("Macbeth", Play.PlayType.TRAGEDY);
 
-
-
-        // 1st example
-        Customer customer1 = new Customer("Amal", "CUST123", 100); // Create a customer
+        Customer customer1 = new Customer("Amal", "CUST123", 300); // Create a customer
         Invoice invoice1 = new Invoice(customer1, List.of(
                 new Performance(hamlet, 55),
                 new Performance(othello, 40)));
 
-        // 2nd example
-        Customer customer2 = new Customer("Siham", "CUST456", 150); // Create another customer
+        Customer customer2 = new Customer("Siham", "CUST456", 160); // Create another customer
         Invoice invoice2 = new Invoice(customer2, List.of(
                 new Performance(asLike, 35),
                 new Performance(othello, 40),
                 new Performance(romeo, 50),
                 new Performance(macBeth, 30)));
 
-        invoice1.calculateInvoice(); // No need to pass plays, as the plays are internally defined in the Invoice class
-        invoice2.calculateInvoice(); // No need to pass plays, as the plays are internally defined in the Invoice class
+        invoice1.calculateInvoice();
+        invoice2.calculateInvoice();
 
         invoice1.toText();
         invoice1.toHTML();
@@ -34,45 +31,3 @@ public class Main {
         invoice2.toHTML();
     }
 }
-
-/*
-import java.util.HashMap;
-import java.util.List;
-
-public class Main {
-    public static void main(String[] args) {
-        // 1st example
-        HashMap<String, Play> plays = new HashMap<>();
-        plays.put("hamlet", new Play("Hamlet", Play.PlayType.TRAGEDY));
-        plays.put("othello", new Play("Othello", Play.PlayType.TRAGEDY));
-
-        Customer customer1 = new Customer("Amal", "CUST123", 100); // Create a customer
-        Invoice invoice1 = new Invoice(customer1, List.of(
-                new Performance("hamlet", 55),
-                new Performance("othello", 40)));
-
-        // 2nd example
-        HashMap<String, Play> plays2 = new HashMap<>();
-        plays2.put("as-like", new Play("As You Like It", Play.PlayType.COMEDY));
-        plays2.put("othello", new Play("Othello", Play.PlayType.TRAGEDY));
-        plays2.put("romeo", new Play("Romeo and Juliet", Play.PlayType.TRAGEDY));
-        plays2.put("macbeth", new Play("Macbeth", Play.PlayType.TRAGEDY));
-
-        Customer customer2 = new Customer("Siham", "CUST456", 150); // Create another customer
-        Invoice invoice2 = new Invoice(customer2, List.of(
-                new Performance("as-like", 35),
-                new Performance("othello", 40),
-                new Performance("romeo", 50),
-                new Performance("macbeth", 30)));
-
-        invoice1.calculateInvoice(plays);
-        invoice2.calculateInvoice(plays2);
-
-        invoice1.toText();
-        invoice1.toHTML();
-
-        invoice2.toText();
-        invoice2.toHTML();
-    }
-}
-*/

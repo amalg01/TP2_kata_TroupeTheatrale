@@ -10,6 +10,8 @@ public class Invoice {
   public List<Performance> performances;
   public InvoiceDetails invoiceDetails;
 
+  Boolean reduction = false;
+
   public Invoice(Customer customer, List<Performance> performances) {
     this.customer = customer;
     this.performances = performances;
@@ -26,8 +28,6 @@ public class Invoice {
 
     for (Performance perf : this.performances) {
       Play play = perf.play;
-      // Play play = plays.get(perf.playID);
-
       double thisAmount = 0.0;
 
       switch (play.getType()) {
@@ -59,15 +59,16 @@ public class Invoice {
 
       totalAmount += thisAmount;
     }
-
     // Apply discount and deduct loyalty points if the customer has more than 150
     // points
-    if (customer.getLoyaltyPoints() > 150) {
+    if (customer.getLoyaltyPoints() >= 150) {
       totalAmount -= 15.0;
       customer.deductLoyaltyPoints(150);
+      this.reduction = true;
     }
     this.invoiceDetails.setTotalAmount(totalAmount);
     this.invoiceDetails.setVolumeCredits(volumeCredits);
+    this.customer.addLoyaltyPoints(volumeCredits);
   }
 
   public String toText() {
@@ -81,6 +82,10 @@ public class Invoice {
     }
     result.append(String.format("Amount owed is %s\n", frmt.format(this.invoiceDetails.getTotalAmount())));
     result.append(String.format("You earned %s credits\n", this.invoiceDetails.getVolumeCredits()));
+    result.append(String.format("Total credits : %s\n", this.customer.getLoyaltyPoints()));
+    if(reduction){
+      result.append(String.format("** Reduction of 15 euros applied **"));
+    }
 
     try (BufferedWriter writer = new BufferedWriter(
         new FileWriter("./src/factures/facture_" + this.customer.getName() + ".txt"))) {
@@ -111,7 +116,13 @@ public class Invoice {
         + frmt.format(this.invoiceDetails.getTotalAmount()) + "</td></tr>"));
     result.append(String.format("<tr><td colspan=\"2\"><strong>Fidelity points earned: </strong></td><td>"
         + this.invoiceDetails.getVolumeCredits() + "</td></tr>"));
+    result.append(String.format("<tr><td colspan=\"2\"><strong>Total fidelity points : </strong></td><td>"+ this.customer.getLoyaltyPoints() + "</td></tr>"));
+
     result.append("</table>");
+    if(reduction){
+      result.append(String.format("<p><strong>** Reduction of 15 euros applied **</strong></p>"));
+    }
+    //Reduction applied
     result.append("<p>Pay within 30 days, and all will be well!</p>");
     // Terminez la construction de la chaîne HTML
     result.append("</body></html>");

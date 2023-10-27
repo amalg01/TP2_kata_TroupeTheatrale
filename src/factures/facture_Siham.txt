@@ -3,5 +3,7 @@ Statement for Siham
   othello: $500.00 (40 seats)
   Romeo and Juliet: $600.00 (50 seats)
   Macbeth: $400.00 (30 seats)
-Amount owed is $2,080.00
+Amount owed is $2,065.00
 You earned 42 credits
+Total credits : 52
+** Reduction of 15 euros applied **
