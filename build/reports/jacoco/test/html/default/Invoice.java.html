@@ -83,8 +83,8 @@ public class Invoice {
 <span class="fc" id="L83">    result.append(String.format(&quot;Amount owed is %s\n&quot;, frmt.format(this.invoiceDetails.getTotalAmount())));</span>
 <span class="fc" id="L84">    result.append(String.format(&quot;You earned %s credits\n&quot;, this.invoiceDetails.getVolumeCredits()));</span>
 <span class="fc" id="L85">    result.append(String.format(&quot;Total credits : %s\n&quot;, this.customer.getLoyaltyPoints()));</span>
-<span class="pc bpc" id="L86" title="1 of 2 branches missed.">    if(reduction){</span>
-<span class="nc" id="L87">      result.append(String.format(&quot;** Reduction of 15 euros applied **&quot;));</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">    if(reduction){</span>
+<span class="fc" id="L87">      result.append(String.format(&quot;** Reduction of 15 euros applied **&quot;));</span>
     }
 
 <span class="fc" id="L90">    try (BufferedWriter writer = new BufferedWriter(</span>
@@ -119,8 +119,8 @@ public class Invoice {
 <span class="fc" id="L119">    result.append(String.format(&quot;&lt;tr&gt;&lt;td colspan=\&quot;2\&quot;&gt;&lt;strong&gt;Total fidelity points : &lt;/strong&gt;&lt;/td&gt;&lt;td&gt;&quot;+ this.customer.getLoyaltyPoints() + &quot;&lt;/td&gt;&lt;/tr&gt;&quot;));</span>
 
 <span class="fc" id="L121">    result.append(&quot;&lt;/table&gt;&quot;);</span>
-<span class="pc bpc" id="L122" title="1 of 2 branches missed.">    if(reduction){</span>
-<span class="nc" id="L123">      result.append(String.format(&quot;&lt;p&gt;&lt;strong&gt;** Reduction of 15 euros applied **&lt;/strong&gt;&lt;/p&gt;&quot;));</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">    if(reduction){</span>
+<span class="fc" id="L123">      result.append(String.format(&quot;&lt;p&gt;&lt;strong&gt;** Reduction of 15 euros applied **&lt;/strong&gt;&lt;/p&gt;&quot;));</span>
     }
     //Reduction applied
 <span class="fc" id="L126">    result.append(&quot;&lt;p&gt;Pay within 30 days, and all will be well!&lt;/p&gt;&quot;);</span>

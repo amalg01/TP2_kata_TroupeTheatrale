@@ -52,5 +52,16 @@ public class StatementPrinterTests {
         invoice.calculateInvoice();
         assertTrue(invoice.reduction);
     }
+    @Test
+    void testAddReductionToHtmlToText() {
+        Customer customer = new Customer("BigCo", "CUST123", 200); // Plus de 150 points pour la réduction de fidélité
+        Performance hamletPerformance = new Performance(new Play("Hamlet", Play.PlayType.TRAGEDY), 35);
+        Invoice invoice = new Invoice(customer, List.of(hamletPerformance));
+        invoice.calculateInvoice();
+        String htmlResult = invoice.toHTML();
+        String textResult = invoice.toText();
 
+        assertTrue(htmlResult.contains("** Reduction of 15 euros applied **"));
+        assertTrue(textResult.contains("** Reduction of 15 euros applied **"));
+    }
 }
