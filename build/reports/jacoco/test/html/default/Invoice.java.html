@@ -1,13 +1,140 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Invoice.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TheatricalPlayers</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Invoice.java</span></div><h1>Invoice.java</h1><pre class="source lang-java linenums">import java.util.*;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Invoice.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TheatricalPlayers</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Invoice.java</span></div><h1>Invoice.java</h1><pre class="source lang-java linenums">import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.NumberFormat;
+import java.util.*;
 
 public class Invoice {
 
-  public String customer;
+  public Customer customer;
   public List&lt;Performance&gt; performances;
+  public InvoiceDetails invoiceDetails;
 
-<span class="fc" id="L8">  public Invoice(String customer, List&lt;Performance&gt; performances) {</span>
-<span class="fc" id="L9">    this.customer = customer;</span>
-<span class="fc" id="L10">    this.performances = performances;</span>
-<span class="fc" id="L11">  }</span>
+<span class="fc" id="L13">  Boolean reduction = false;</span>
+
+<span class="fc" id="L15">  public Invoice(Customer customer, List&lt;Performance&gt; performances) {</span>
+<span class="fc" id="L16">    this.customer = customer;</span>
+<span class="fc" id="L17">    this.performances = performances;</span>
+
+    // on instancie receipt pour ne pas avoir l'erreur NullPointerException
+<span class="fc" id="L20">    this.invoiceDetails = new InvoiceDetails(0.0, 0);</span>
+
+<span class="fc" id="L22">  }</span>
+
+  public void calculateInvoice() {
+
+<span class="fc" id="L26">    double totalAmount = 0.0;</span>
+<span class="fc" id="L27">    int volumeCredits = 0;</span>
+
+<span class="fc bfc" id="L29" title="All 2 branches covered.">    for (Performance perf : this.performances) {</span>
+<span class="fc" id="L30">      Play play = perf.play;</span>
+<span class="fc" id="L31">      double thisAmount = 0.0;</span>
+
+<span class="pc bpc" id="L33" title="1 of 3 branches missed.">      switch (play.getType()) {</span>
+        case TRAGEDY:
+<span class="fc" id="L35">          thisAmount = 400.0;</span>
+<span class="pc bpc" id="L36" title="1 of 2 branches missed.">          if (perf.audience &gt; 30) {</span>
+<span class="fc" id="L37">            thisAmount += 10.0 * (perf.audience - 30);</span>
+          }
+          break;
+        case COMEDY:
+<span class="fc" id="L41">          thisAmount = 300.0;</span>
+<span class="pc bpc" id="L42" title="1 of 2 branches missed.">          if (perf.audience &gt; 20) {</span>
+<span class="fc" id="L43">            thisAmount += 100.0 + 5.0 * (perf.audience - 20);</span>
+          }
+<span class="fc" id="L45">          thisAmount += 3.0 * perf.audience;</span>
+<span class="fc" id="L46">          break;</span>
+        default:
+<span class="nc" id="L48">          throw new Error(&quot;unknown type: ${play.type}&quot;);</span>
+      }
+
+      // ajouter les dÃ©tails de la piÃ¨ce dans notre liste de PlayDetails
+<span class="fc" id="L52">      this.invoiceDetails.playDetails.add(new PlayDetails(play.getName(), thisAmount, perf.audience));</span>
+
+      // add volume credits
+<span class="fc" id="L55">      volumeCredits += Math.max(perf.audience - 30, 0);</span>
+      // add extra credit for every ten comedy attendees
+<span class="fc bfc" id="L57" title="All 2 branches covered.">      if (Play.PlayType.COMEDY.equals(play.getType()))</span>
+<span class="fc" id="L58">        volumeCredits += Math.floor(perf.audience / 5);</span>
+
+<span class="fc" id="L60">      totalAmount += thisAmount;</span>
+<span class="fc" id="L61">    }</span>
+    // Apply discount and deduct loyalty points if the customer has more than 150
+    // points
+<span class="fc bfc" id="L64" title="All 2 branches covered.">    if (customer.getLoyaltyPoints() &gt;= 150) {</span>
+<span class="fc" id="L65">      totalAmount -= 15.0;</span>
+<span class="fc" id="L66">      customer.deductLoyaltyPoints(150);</span>
+<span class="fc" id="L67">      this.reduction = true;</span>
+    }
+<span class="fc" id="L69">    this.invoiceDetails.setTotalAmount(totalAmount);</span>
+<span class="fc" id="L70">    this.invoiceDetails.setVolumeCredits(volumeCredits);</span>
+<span class="fc" id="L71">    this.customer.addLoyaltyPoints(volumeCredits);</span>
+<span class="fc" id="L72">  }</span>
+
+  public String toText() {
+<span class="fc" id="L75">    StringBuffer result = new StringBuffer(String.format(&quot;Statement for %s\n&quot;, this.customer.getName()));</span>
+<span class="fc" id="L76">    NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);</span>
+
+<span class="fc bfc" id="L78" title="All 2 branches covered.">    for (PlayDetails play : this.invoiceDetails.playDetails) {</span>
+
+<span class="fc" id="L80">      result.append(String.format(&quot;  %s: %s (%s seats)\n&quot;, play.getPlayName(), frmt.format(play.getPricePaid()),</span>
+<span class="fc" id="L81">          play.getSeatsSold()));</span>
+<span class="fc" id="L82">    }</span>
+<span class="fc" id="L83">    result.append(String.format(&quot;Amount owed is %s\n&quot;, frmt.format(this.invoiceDetails.getTotalAmount())));</span>
+<span class="fc" id="L84">    result.append(String.format(&quot;You earned %s credits\n&quot;, this.invoiceDetails.getVolumeCredits()));</span>
+<span class="fc" id="L85">    result.append(String.format(&quot;Total credits : %s\n&quot;, this.customer.getLoyaltyPoints()));</span>
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">    if(reduction){</span>
+<span class="nc" id="L87">      result.append(String.format(&quot;** Reduction of 15 euros applied **&quot;));</span>
+    }
+
+<span class="fc" id="L90">    try (BufferedWriter writer = new BufferedWriter(</span>
+<span class="fc" id="L91">        new FileWriter(&quot;./src/factures/facture_&quot; + this.customer.getName() + &quot;.txt&quot;))) {</span>
+<span class="fc" id="L92">      writer.write(result.toString());</span>
+<span class="nc" id="L93">    } catch (IOException e) {</span>
+<span class="nc" id="L94">      System.err.println(&quot;Une erreur s'est produite lors de la crÃ©ation du fichier : &quot; + e.getMessage());</span>
+<span class="fc" id="L95">    }</span>
+
+<span class="fc" id="L97">    return result.toString();</span>
+  }
+
+  public String toHTML() {
+<span class="fc" id="L101">    StringBuffer result = new StringBuffer();</span>
+<span class="fc" id="L102">    result.append(&quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;Invoice&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&quot;);</span>
+
+<span class="fc" id="L104">    result.append(</span>
+<span class="fc" id="L105">        String.format(&quot;&lt;h1&gt;Invoice&lt;/h1&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Client :&lt;/strong&gt; %s&lt;/li&gt;&lt;/ul&gt;&quot;, this.customer.getName()));</span>
+<span class="fc" id="L106">    result.append(&quot;&lt;table border=\&quot;1\&quot;&gt;&lt;tr&gt;&lt;th&gt;Play&lt;/th&gt;&lt;th&gt;Seats sold&lt;/th&gt;&lt;th&gt;Price&lt;/th&gt;&lt;/tr&gt;&quot;);</span>
+
+<span class="fc" id="L108">    NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);</span>
+
+<span class="fc bfc" id="L110" title="All 2 branches covered.">    for (PlayDetails play : this.invoiceDetails.playDetails) {</span>
+<span class="fc" id="L111">      result.append(String.format(&quot;&lt;tr&gt;&lt;td&gt;%s&lt;/td&gt;&lt;td&gt;%s&lt;/td&gt;&lt;td&gt;%s&lt;/td&gt;&lt;/tr&gt;&quot;,</span>
+<span class="fc" id="L112">          play.getPlayName(), play.getSeatsSold(), frmt.format(play.getPricePaid())));</span>
+<span class="fc" id="L113">    }</span>
+
+<span class="fc" id="L115">    result.append(String.format(&quot;&lt;tr&gt;&lt;td colspan=\&quot;2\&quot;&gt;&lt;strong&gt;Total owed:&lt;/strong&gt;&lt;/td&gt; &lt;td&gt;&quot;</span>
+<span class="fc" id="L116">        + frmt.format(this.invoiceDetails.getTotalAmount()) + &quot;&lt;/td&gt;&lt;/tr&gt;&quot;));</span>
+<span class="fc" id="L117">    result.append(String.format(&quot;&lt;tr&gt;&lt;td colspan=\&quot;2\&quot;&gt;&lt;strong&gt;Fidelity points earned: &lt;/strong&gt;&lt;/td&gt;&lt;td&gt;&quot;</span>
+<span class="fc" id="L118">        + this.invoiceDetails.getVolumeCredits() + &quot;&lt;/td&gt;&lt;/tr&gt;&quot;));</span>
+<span class="fc" id="L119">    result.append(String.format(&quot;&lt;tr&gt;&lt;td colspan=\&quot;2\&quot;&gt;&lt;strong&gt;Total fidelity points : &lt;/strong&gt;&lt;/td&gt;&lt;td&gt;&quot;+ this.customer.getLoyaltyPoints() + &quot;&lt;/td&gt;&lt;/tr&gt;&quot;));</span>
+
+<span class="fc" id="L121">    result.append(&quot;&lt;/table&gt;&quot;);</span>
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">    if(reduction){</span>
+<span class="nc" id="L123">      result.append(String.format(&quot;&lt;p&gt;&lt;strong&gt;** Reduction of 15 euros applied **&lt;/strong&gt;&lt;/p&gt;&quot;));</span>
+    }
+    //Reduction applied
+<span class="fc" id="L126">    result.append(&quot;&lt;p&gt;Pay within 30 days, and all will be well!&lt;/p&gt;&quot;);</span>
+    // Terminez la construction de la chaÃ®ne HTML
+<span class="fc" id="L128">    result.append(&quot;&lt;/body&gt;&lt;/html&gt;&quot;);</span>
+<span class="fc" id="L129">    try (BufferedWriter writer = new BufferedWriter(</span>
+<span class="fc" id="L130">        new FileWriter(&quot;./src/factures/facture_&quot; + this.customer.getName() + &quot;.html&quot;))) {</span>
+<span class="fc" id="L131">      writer.write(result.toString());</span>
+<span class="nc" id="L132">    } catch (IOException e) {</span>
+<span class="nc" id="L133">      System.err.println(&quot;Une erreur s'est produite lors de la crÃ©ation du fichier : &quot; + e.getMessage());</span>
+<span class="fc" id="L134">    }</span>
+
+<span class="fc" id="L136">    return result.toString();</span>
+  }
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

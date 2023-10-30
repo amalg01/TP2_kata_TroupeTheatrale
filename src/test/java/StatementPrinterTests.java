@@ -2,7 +2,8 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.approvaltests.Approvals.verify;
-import static org.approvaltests.Approvals.verifyHtml; 
+import static org.approvaltests.Approvals.verifyHtml;
+import static org.junit.jupiter.api.Assertions.assertTrue; 
 
 public class StatementPrinterTests {
 
@@ -42,5 +43,14 @@ public class StatementPrinterTests {
         verifyHtml(result2);  
         
     } 
+    // Tests unitaires
+    @Test
+    void testCalculateInvoiceWithReduction() {
+        Customer customer = new Customer("BigCo", "CUST123", 200); // Plus de 150 points pour la réduction de fidélité
+        Performance hamletPerformance = new Performance(new Play("Hamlet", Play.PlayType.TRAGEDY), 35);
+        Invoice invoice = new Invoice(customer, List.of(hamletPerformance));
+        invoice.calculateInvoice();
+        assertTrue(invoice.reduction);
+    }
 
 }

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="StatementPrinterTests" tests="2" skipped="0" failures="0" errors="0" timestamp="2023-10-27T13:22:26" hostname="AMAL_GOURRI" time="0.619">
+<testsuite name="StatementPrinterTests" tests="3" skipped="0" failures="0" errors="0" timestamp="2023-10-30T08:30:13" hostname="AMAL_GOURRI" time="0.894">
   <properties/>
-  <testcase name="exampleStatement2()" classname="StatementPrinterTests" time="0.49"/>
-  <testcase name="exampleStatement()" classname="StatementPrinterTests" time="0.128"/>
+  <testcase name="exampleStatement2()" classname="StatementPrinterTests" time="0.684"/>
+  <testcase name="exampleStatement()" classname="StatementPrinterTests" time="0.18"/>
+  <testcase name="testCalculateInvoiceWithReduction()" classname="StatementPrinterTests" time="0.023"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
