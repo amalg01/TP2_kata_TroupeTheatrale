@@ -1,4 +1,7 @@
 import org.junit.jupiter.api.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.List;
 
 import static org.approvaltests.Approvals.verify;
@@ -69,5 +72,21 @@ public class StatementPrinterTests {
     void testGetCustomerNumber() {
         Customer customer = new Customer("John Doe", "CUST123", 100);
         assertEquals("CUST123", customer.getCustomerNumber());
+    }
+    @Test
+    void testDeductLoyaltyPointsInsufficientPoints() {
+        Customer customer = new Customer("John Doe", "CUST123", 100);
+        // Capture the output of System.err.println()
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        System.setErr(new PrintStream(outputStream));
+        
+        customer.deductLoyaltyPoints(150); // Attempt to deduct more points than available
+
+        // Reset System.err to the original PrintStream
+        System.setErr(System.err);
+
+        // Assert that the error message contains the expected text
+        assertTrue(outputStream.toString().contains("Insufficient loyalty points to deduct."));
+        assertEquals(100, customer.getLoyaltyPoints()); // Loyalty points should remain unchanged
     }
 }

@@ -26,12 +26,12 @@
 <span class="fc" id="L26">    }</span>
     
     public void deductLoyaltyPoints(int points) {
-<span class="pc bpc" id="L29" title="1 of 2 branches missed.">        if (points &lt;= loyaltyPoints) {</span>
+<span class="fc bfc" id="L29" title="All 2 branches covered.">        if (points &lt;= loyaltyPoints) {</span>
 <span class="fc" id="L30">            loyaltyPoints -= points;</span>
         } else {
             // Handle the case where the customer doesn't have enough points to deduct
             // You can throw an exception, display a message, or handle it as needed.
-<span class="nc" id="L34">            System.err.println(&quot;Insufficient loyalty points to deduct.&quot;);</span>
+<span class="fc" id="L34">            System.err.println(&quot;Insufficient loyalty points to deduct.&quot;);</span>
         }
 <span class="fc" id="L36">    }</span>
 }
