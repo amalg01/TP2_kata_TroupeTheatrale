@@ -3,6 +3,7 @@ import java.util.List;
 
 import static org.approvaltests.Approvals.verify;
 import static org.approvaltests.Approvals.verifyHtml;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue; 
 
 public class StatementPrinterTests {
@@ -63,5 +64,10 @@ public class StatementPrinterTests {
 
         assertTrue(htmlResult.contains("** Reduction of 15 euros applied **"));
         assertTrue(textResult.contains("** Reduction of 15 euros applied **"));
+    }
+    @Test
+    void testGetCustomerNumber() {
+        Customer customer = new Customer("John Doe", "CUST123", 100);
+        assertEquals("CUST123", customer.getCustomerNumber());
     }
 }
